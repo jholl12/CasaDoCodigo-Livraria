@@ -1,43 +1,43 @@
 package br.com.casadocodigo.livraria.modelo;
 
-import br.com.casadocodigo.livraria.modelo.produtos.Livro;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import br.com.casadocodigo.livraria.ConnectionFactory;
 import br.com.casadocodigo.livraria.modelo.produtos.LivroFisico;
 import br.com.casadocodigo.livraria.modelo.produtos.Produto;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class RepositorioDeProdutos {
-	
-	public ObservableList<Produto> lista(){
+
+	public ObservableList<Produto> lista() {
+		ObservableList<Produto> produtos = FXCollections.observableArrayList();
+		Connection conn = new ConnectionFactory().getConnetion();
+		String query = "SELECT * FROM livraria.produtos";
+		PreparedStatement ps;
 		
-		Autor autor = new Autor();
-		autor.setNome("Rodrigo Turini");
-		autor.setEmail("rodrigo.turini@caelum.com.br");
-		autor.setCpf("123.456.789.10");
+		try {
+			ps = conn.prepareStatement(query);
+			ResultSet result = ps.executeQuery();
+			
+			while(result.next()){
+				LivroFisico livro = new LivroFisico(new Autor());
+				livro.setNome(result.getString("nome"));
+				livro.setDescricao(result.getString("descricao"));
+				livro.setValor(result.getDouble("valor"));
+				livro.setIsbn(result.getString("isbn"));
+				produtos.add(livro);
+			}
+			result.close();
+			ps.close();
+			conn.close();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
 		
-		Livro livro = new LivroFisico(autor);
-		livro.setNome("Java 8 Prático");
-		livro.setDescricao("Novos recursos da linguagem");
-		livro.setValor(59.90);
-		livro.setIsbn("978-85-66250-46-6");
-		
-		Livro maisUmLivro = new LivroFisico(autor);
-		maisUmLivro.setNome("Desbravando a O.O");
-		maisUmLivro.setDescricao("Livro de Java e O.O");
-		maisUmLivro.setValor(59.90);
-		maisUmLivro.setIsbn("321-54-67890-11-2");
-		
-		Autor outroAutor = new Autor();
-		outroAutor.setNome("Paulo Silveira");
-		outroAutor.setEmail("paulo.silveira@caelum.com.br");
-		outroAutor.setCpf("123.456.789.11");
-		
-		Livro outroLivro = new LivroFisico(outroAutor);
-		outroLivro.setNome("Lógica de Programação");
-		outroLivro.setDescricao("Crie seus primeiros programas");
-		outroLivro.setValor(59.90);
-		outroLivro.setIsbn("978-85-66250-22-0");
-		
-		return FXCollections.observableArrayList(livro, maisUmLivro, outroLivro);
+		return produtos;
 	}
 }
