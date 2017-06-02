@@ -2,9 +2,9 @@ package br.com.casadocodigo.livraria.application;
 
 import java.io.FileNotFoundException;
 
+import br.com.casadocodigo.livraria.dao.ProdutoDAO;
 import br.com.casadocodigo.livraria.io.Exportador;
 import br.com.casadocodigo.livraria.modelo.produtos.Produto;
-import br.com.casadocodigo.livraria.repositorio.ProdutoDAO;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
