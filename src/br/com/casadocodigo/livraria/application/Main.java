@@ -23,67 +23,86 @@ import javafx.scene.text.FontPosture;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-	
+
 	@Override
 	public void start(Stage primaryStage) {
 		Group grupo = new Group();
 		Scene cenario = new Scene(grupo, 690, 510);
 		primaryStage.setScene(cenario);
 
-		//Recupera lista de produtos e adiciona na tabela
+		// Recupera lista de produtos e adiciona na tabela
 		ObservableList<Produto> produtos = new ProdutoDAO().lista();
 		TableView<Produto> tabela = new TableView<>(produtos);
 
-		//Cria coluna de NOME
+		// Cria coluna de NOME
 		TableColumn colunaNome = new TableColumn("Nome");
 		colunaNome.setMinWidth(180);
 		colunaNome.setCellValueFactory(new PropertyValueFactory("nome"));
 
-		//Cria coluna de DESCRICAO
+		// Cria coluna de DESCRICAO
 		TableColumn colunaDescricao = new TableColumn("Descrição");
 		colunaDescricao.setMinWidth(230);
 		colunaDescricao.setCellValueFactory(new PropertyValueFactory("descricao"));
 
-		//Cria coluna de VALOR
+		// Cria coluna de VALOR
 		TableColumn colunaValor = new TableColumn("Valor");
 		colunaValor.setMinWidth(60);
 		colunaValor.setCellValueFactory(new PropertyValueFactory("valor"));
 
-		//Cria coluna de ISBN
+		// Cria coluna de ISBN
 		TableColumn colunaIsbn = new TableColumn("ISBN");
 		colunaIsbn.setMinWidth(180);
 		colunaIsbn.setCellValueFactory(new PropertyValueFactory("isbn"));
 
-		//Adiciona as colunas na tabela
+		// Adiciona as colunas na tabela
 		tabela.getColumns().addAll(colunaNome, colunaDescricao, colunaValor, colunaIsbn);
 
-		//Adiciona tabela em uma caixa para alinhar
+		// Adiciona tabela em uma caixa para alinhar
 		VBox vbox = new VBox(tabela);
 		vbox.setPadding(new Insets(70, 0, 0, 10));
 
-		//Cria label
+		// Cria label
 		Label label = new Label("Listagem de Livros");
 		label.setFont(Font.font("Lucida Grande", FontPosture.REGULAR, 30));
 		label.setPadding(new Insets(20, 0, 10, 10));
-		
-		//Cria o botão
+
+		// Cria o botão
 		Button btnExportar = new Button("Exportar CSV");
 		btnExportar.setLayoutX(575);
 		btnExportar.setLayoutY(34);
-		
-		//Classe anônima dentro do parâmetro de ação do click
-		btnExportar.setOnAction(new EventHandler<ActionEvent>(){
+
+		// Classe anônima dentro do parâmetro de ação do click
+		btnExportar.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
-			public void handle(ActionEvent event){
-				try {
-					new Exportador().exportarCSV(produtos);
-				} catch (FileNotFoundException e) {
-					throw new RuntimeException("Erro ao exportar arquivo: " + e);
-				}
+			public void handle(ActionEvent event) {
+				//Executando ação do botão em uma thread paralela com classe anônima
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						try {
+							Thread.sleep(20000);
+							new Exportador().exportarCSV(produtos);
+						} catch (InterruptedException | FileNotFoundException e) {
+							throw new RuntimeException("Ops, ocorreu um erro: " + e);
+						}
+					}
+				}).start();
 			}
 		});
-		
-		grupo.getChildren().addAll(label, vbox, btnExportar);
+
+		// Cria botão
+		Button btnAdicionar = new Button("Adicionar Livro");
+		btnAdicionar.setLayoutX(475);
+		btnAdicionar.setLayoutY(34);
+
+		// btnAdicionar.setOnAction(new EventHandler<ActionEvent>() {
+		// @Override
+		// public void handle(ActionEvent event) {
+		// new ProdutoDAO().adiciona(produto);
+		// }
+		// });
+
+		grupo.getChildren().addAll(label, vbox, btnExportar, btnAdicionar);
 
 		primaryStage.setTitle("Sistema da livraria com Java FX");
 		primaryStage.show();
