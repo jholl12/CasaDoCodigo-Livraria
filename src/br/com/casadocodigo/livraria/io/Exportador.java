@@ -1,4 +1,4 @@
-package br.com.casadocodigo.livraria.modelo;
+package br.com.casadocodigo.livraria.io;
 
 import java.io.FileNotFoundException;
 import java.io.PrintStream;

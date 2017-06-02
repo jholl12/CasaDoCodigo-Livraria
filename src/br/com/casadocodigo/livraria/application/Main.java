@@ -1,9 +1,10 @@
 package br.com.casadocodigo.livraria.application;
 
 import java.io.FileNotFoundException;
-import br.com.casadocodigo.livraria.modelo.Exportador;
-import br.com.casadocodigo.livraria.modelo.RepositorioDeProdutos;
+
+import br.com.casadocodigo.livraria.io.Exportador;
 import br.com.casadocodigo.livraria.modelo.produtos.Produto;
+import br.com.casadocodigo.livraria.repositorio.ProdutoDAO;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -30,7 +31,7 @@ public class Main extends Application {
 		primaryStage.setScene(cenario);
 
 		//Recupera lista de produtos e adiciona na tabela
-		ObservableList<Produto> produtos = new RepositorioDeProdutos().lista();
+		ObservableList<Produto> produtos = new ProdutoDAO().lista();
 		TableView<Produto> tabela = new TableView<>(produtos);
 
 		//Cria coluna de NOME

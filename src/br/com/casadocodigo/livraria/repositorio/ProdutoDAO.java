@@ -1,10 +1,12 @@
-package br.com.casadocodigo.livraria.modelo;
+package br.com.casadocodigo.livraria.repositorio;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import br.com.casadocodigo.livraria.ConnectionFactory;
+
+import br.com.casadocodigo.livraria.db.ConnectionFactory;
+import br.com.casadocodigo.livraria.modelo.Autor;
 import br.com.casadocodigo.livraria.modelo.produtos.LivroFisico;
 import br.com.casadocodigo.livraria.modelo.produtos.Produto;
 import javafx.collections.FXCollections;
@@ -16,7 +18,7 @@ import javafx.collections.ObservableList;
  * @author Jhonata Santos
  * @version 1.0
  */
-public class RepositorioDeProdutos {
+public class ProdutoDAO {
 
 	/**
 	 * Lista todos os produtos existentes no banco de dados referente a tabela
@@ -81,7 +83,7 @@ public class RepositorioDeProdutos {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		RepositorioDeProdutos rp = new RepositorioDeProdutos();
+		ProdutoDAO rp = new ProdutoDAO();
 		LivroFisico produto = new LivroFisico(new Autor());
 		produto.setNome("Teste01");
 		produto.setDescricao("Teste01");

@@ -1,4 +1,4 @@
-package br.com.casadocodigo.livraria;
+package br.com.casadocodigo.livraria.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
