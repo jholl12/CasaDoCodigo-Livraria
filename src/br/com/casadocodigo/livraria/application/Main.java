@@ -7,6 +7,8 @@ import br.com.casadocodigo.livraria.io.Exportador;
 import br.com.casadocodigo.livraria.modelo.produtos.Produto;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -34,22 +36,27 @@ public class Main extends Application {
 		ObservableList<Produto> produtos = new ProdutoDAO().lista();
 		TableView<Produto> tabela = new TableView<>(produtos);
 
-		// Cria coluna de NOME
+		
+		//======================
+		//Cria colunas na tabela
+		//======================
+		
+		//NOME
 		TableColumn colunaNome = new TableColumn("Nome");
 		colunaNome.setMinWidth(180);
 		colunaNome.setCellValueFactory(new PropertyValueFactory("nome"));
 
-		// Cria coluna de DESCRICAO
+		//DESCRICAO
 		TableColumn colunaDescricao = new TableColumn("Descrição");
 		colunaDescricao.setMinWidth(230);
 		colunaDescricao.setCellValueFactory(new PropertyValueFactory("descricao"));
 
-		// Cria coluna de VALOR
+		//VALOR
 		TableColumn colunaValor = new TableColumn("Valor");
 		colunaValor.setMinWidth(60);
 		colunaValor.setCellValueFactory(new PropertyValueFactory("valor"));
 
-		// Cria coluna de ISBN
+		//ISBN
 		TableColumn colunaIsbn = new TableColumn("ISBN");
 		colunaIsbn.setMinWidth(180);
 		colunaIsbn.setCellValueFactory(new PropertyValueFactory("isbn"));
@@ -61,48 +68,65 @@ public class Main extends Application {
 		VBox vbox = new VBox(tabela);
 		vbox.setPadding(new Insets(70, 0, 0, 10));
 
-		// Cria label
-		Label label = new Label("Listagem de Livros");
-		label.setFont(Font.font("Lucida Grande", FontPosture.REGULAR, 30));
-		label.setPadding(new Insets(20, 0, 10, 10));
+		//===================
+		//Cria labels da tela
+		//===================
+		
+		//Listagem de Livros
+		Label listagemLivrosLabel = new Label("Listagem de Livros");
+		listagemLivrosLabel.setFont(Font.font("Lucida Grande", FontPosture.REGULAR, 30));
+		listagemLivrosLabel.setPadding(new Insets(20, 0, 10, 10));
 
-		// Cria o botão
+		//Progresso ao exportar
+		Label progressoExportar = new Label();
+		progressoExportar.setLayoutX(495);
+		progressoExportar.setLayoutY(38);
+		
+		//===================
+		//Cria botões da tela
+		//===================
+		
+		//Exportar
 		Button btnExportar = new Button("Exportar CSV");
 		btnExportar.setLayoutX(575);
 		btnExportar.setLayoutY(34);
-
-		// Classe anônima dentro do parâmetro de ação do click
+		
+		//================
+		//Ações dos botões
+		//================
+		
+		// Classe anônima dentro do parâmetro de ação do click EXPORTAR
 		btnExportar.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				//Executando ação do botão em uma thread paralela com classe anônima
-				new Thread(new Runnable() {
+				Task<Void> task = new Task<Void>(){
 					@Override
-					public void run() {
-						try {
-							Thread.sleep(20000);
-							new Exportador().exportarCSV(produtos);
-						} catch (InterruptedException | FileNotFoundException e) {
-							throw new RuntimeException("Ops, ocorreu um erro: " + e);
-						}
+					protected Void call() throws Exception {
+						Thread.sleep(20000);
+						new Exportador().exportarCSV(produtos);
+						return null;
+					}					
+				};
+				
+				task.setOnRunning(new EventHandler<WorkerStateEvent>() {
+					@Override
+					public void handle(WorkerStateEvent event) {
+						progressoExportar.setText("Exportando...");
 					}
-				}).start();
+				});
+				
+				task.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+					@Override
+					public void handle(WorkerStateEvent event) {
+						progressoExportar.setText("Concluído!");
+					}
+				});
+				
+				new Thread(task).start();
 			}
 		});
 
-		// Cria botão
-		Button btnAdicionar = new Button("Adicionar Livro");
-		btnAdicionar.setLayoutX(475);
-		btnAdicionar.setLayoutY(34);
-
-		// btnAdicionar.setOnAction(new EventHandler<ActionEvent>() {
-		// @Override
-		// public void handle(ActionEvent event) {
-		// new ProdutoDAO().adiciona(produto);
-		// }
-		// });
-
-		grupo.getChildren().addAll(label, vbox, btnExportar, btnAdicionar);
+		grupo.getChildren().addAll(listagemLivrosLabel, progressoExportar, vbox, btnExportar);
 
 		primaryStage.setTitle("Sistema da livraria com Java FX");
 		primaryStage.show();
