@@ -27,7 +27,7 @@ public class ProdutoDAO {
 	 * @return todos os produtos do banco
 	 * @author Jhonata Santos
 	 */
-	public ObservableList<Produto> lista() {
+	public ObservableList<Produto> listarProdutos() {
 		ObservableList<Produto> produtos = FXCollections.observableArrayList();
 		Connection conn = new ConnectionFactory().getConnetion();
 		String query = "SELECT * FROM livraria.produtos";
@@ -61,7 +61,7 @@ public class ProdutoDAO {
 	 * @param produto
 	 * @author Jhonata Santos
 	 */
-	public void adiciona(Produto produto) {
+	public void adicionarProduto(Produto produto) {
 		String query = "INSERT INTO produtos (nome, descricao, valor, isbn) " + "VALUES (?, ?, ?, ?)";
 
 		try (Connection conn = new ConnectionFactory().getConnetion()) {
@@ -77,6 +77,23 @@ public class ProdutoDAO {
 			throw new RuntimeException(e);
 		}
 	}
+	
+	/**
+	 * Realiza a soma total dos valores dos produtos existentes no banco de dados
+	 * 
+	 * @return Retorna o valor total de mercadorias em estoque
+	 * @author Jhonata Santos
+	 */
+	public double somarValorProdutos(){
+		ObservableList<Produto> produtos = listarProdutos();
+		double valorTotal = 0;
+		
+		for(Produto produto: produtos){
+			valorTotal += produto.getValor();
+		}
+		
+		return valorTotal;
+	}
 
 	/**
 	 * MAIN PARA TESTAR OS MÈTODOS IMPLEMENTADOS
@@ -91,6 +108,6 @@ public class ProdutoDAO {
 		produto.setIsbn("Teste01");
 		;
 
-		rp.adiciona(produto);
+		rp.adicionarProduto(produto);
 	}
 }

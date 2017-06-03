@@ -1,1 +1,35 @@
-/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+#label-listagem-livros {
+	-fx-font-size: 30.0px;
+	-fx-padding: 20 0 10 10;
+}
+
+#label-progresso-exportar {
+	-fx-translate-x: 495; 
+	-fx-translate-y: 38;
+}
+
+#label-soma-produtos {
+	-fx-font-size: 15px;
+	-fx-translate-x: 210;
+	-fx-translate-y: 480;
+	-fx-text-fill: #1f95ce;
+}
+
+#vbox {
+	-fx-padding: 70 0 0 10;
+}
+
+.button {
+	-fx-translate-x: 575; 
+	-fx-translate-y: 34;
+	-fx-background-color: linear-gradient(#61a2b1, #2A5058);
+	-fx-effect: dropshadow(three-pass-box, rgba(0,0, 0, 0.6), 5, 0.0, 0, 1);
+	-fx-background-color: #1f95ce;
+	-fx-text-fill: white;
+}
+
+.button:hover {
+	-fx-background-color: rgba(31, 149, 206, 0.71);
+}
+
+
