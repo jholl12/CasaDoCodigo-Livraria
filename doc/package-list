@@ -1,0 +1,9 @@
+br.com.casadocodigo.livraria.application
+br.com.casadocodigo.livraria.dao
+br.com.casadocodigo.livraria.db
+br.com.casadocodigo.livraria.exceptions
+br.com.casadocodigo.livraria.io
+br.com.casadocodigo.livraria.modelo
+br.com.casadocodigo.livraria.modelo.produtos
+br.com.casadocodigo.livraria.testes
+br.com.casadocodigo.livraria.threads
