@@ -4,10 +4,16 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * Classe responsável por fazer as devidas conexões de acesso com o bando de dados
+ * 
+ * @author Jhonata Santos
+ * @version 1.0
+ */
 public class ConnectionFactory {
 
 	/**
-	 * Realiza abertura de conexão com o banco de dados MySQL
+	 * Realiza abertura de conexão com o banco de dados
 	 * 
 	 * @return Retorna uma conexão aberta
 	 * @author Jhonata Santos

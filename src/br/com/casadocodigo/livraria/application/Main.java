@@ -1,17 +1,10 @@
 package br.com.casadocodigo.livraria.application;
 
-import java.io.FileNotFoundException;
-
 import br.com.casadocodigo.livraria.dao.ProdutoDAO;
-import br.com.casadocodigo.livraria.io.Exportador;
 import br.com.casadocodigo.livraria.modelo.produtos.Produto;
+import br.com.casadocodigo.livraria.threads.Actions;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -20,12 +13,21 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
 import javafx.stage.Stage;
 
+/**
+ * Classe responsável pela view de listagem de todos os livros cadastradas na
+ * base de dados
+ * 
+ * @author Jhonata Santos
+ * @version 1.0
+ */
 public class Main extends Application {
 
+	/**
+	 * Responsável por construir e startar a view de listagem de livros
+	 * @author Jhonata Santos
+	 */
 	@Override
 	public void start(Stage primaryStage) {
 		Group grupo = new Group();
@@ -82,7 +84,7 @@ public class Main extends Application {
 						new ProdutoDAO().somarValorProdutos(), produtos.size()));
 
 		labelListagemLivros.setId("label-listagem-livros");
-		labelProgressoExportar.setId("-label-progresso-exportar");
+		labelProgressoExportar.setId("label-progresso-exportar");
 		labelSomaProdutos.setId("label-soma-produtos");
 
 		// ===================
@@ -95,36 +97,8 @@ public class Main extends Application {
 		// Ações dos botões
 		// ================
 
-		// Classe anônima dentro do parâmetro de ação do click EXPORTAR
-		btnExportar.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				Task<Void> task = new Task<Void>() {
-					@Override
-					protected Void call() throws Exception {
-						Thread.sleep(20000);
-						new Exportador().exportarCSV(produtos);
-						return null;
-					}
-				};
-
-				task.setOnRunning(new EventHandler<WorkerStateEvent>() {
-					@Override
-					public void handle(WorkerStateEvent event) {
-						labelProgressoExportar.setText("Exportando...");
-					}
-				});
-
-				task.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-					@Override
-					public void handle(WorkerStateEvent event) {
-						labelProgressoExportar.setText("Concluído!");
-					}
-				});
-
-				new Thread(task).start();
-			}
-		});
+		//Realiza a ação de exportar em uma nova thread
+		btnExportar.setOnAction(new Actions().threadAction(produtos, labelProgressoExportar));
 
 		grupo.getChildren().addAll(labelListagemLivros, labelProgressoExportar, labelSomaProdutos, vbox, btnExportar);
 
@@ -132,6 +106,11 @@ public class Main extends Application {
 		primaryStage.show();
 	}
 
+	/**
+	 * Executa a aplicação
+	 * @param args
+	 * @author Jhonata Santos
+	 */
 	public static void main(String[] args) {
 		launch(args);
 	}

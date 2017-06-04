@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import br.com.casadocodigo.livraria.db.ConnectionFactory;
 import br.com.casadocodigo.livraria.modelo.Autor;
 import br.com.casadocodigo.livraria.modelo.produtos.LivroFisico;
@@ -13,7 +12,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 /**
- * Classo responsável por fazer a comunição das ações com o banco de dados
+ * Classe responsável por cuidar do acesso aos dados da classe {@link Produto}
  * 
  * @author Jhonata Santos
  * @version 1.0
@@ -58,7 +57,7 @@ public class ProdutoDAO {
 	/**
 	 * Realiza a inserção do produto no banco de dados
 	 * 
-	 * @param produto
+	 * @param produto que deverá ser adicionado no banco
 	 * @author Jhonata Santos
 	 */
 	public void adicionarProduto(Produto produto) {
@@ -81,7 +80,7 @@ public class ProdutoDAO {
 	/**
 	 * Realiza a soma total dos valores dos produtos existentes no banco de dados
 	 * 
-	 * @return Retorna o valor total de mercadorias em estoque
+	 * @return o valor total de mercadorias em estoque
 	 * @author Jhonata Santos
 	 */
 	public double somarValorProdutos(){
@@ -93,21 +92,5 @@ public class ProdutoDAO {
 		}
 		
 		return valorTotal;
-	}
-
-	/**
-	 * MAIN PARA TESTAR OS MÈTODOS IMPLEMENTADOS
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		ProdutoDAO rp = new ProdutoDAO();
-		LivroFisico produto = new LivroFisico(new Autor());
-		produto.setNome("Teste01");
-		produto.setDescricao("Teste01");
-		produto.setValor(00.00);
-		produto.setIsbn("Teste01");
-		;
-
-		rp.adicionarProduto(produto);
 	}
 }
