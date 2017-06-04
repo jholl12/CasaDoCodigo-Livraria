@@ -41,30 +41,14 @@ public class Main extends Application {
 		ObservableList<Produto> produtos = new ProdutoDAO().listarProdutos();
 		TableView<Produto> tabela = new TableView<>(produtos);
 
-		// ======================
+		// ===================
 		// Cria colunas na tabela
-		// ======================
-
-		// NOME
-		TableColumn colunaNome = new TableColumn("Nome");
-		colunaNome.setMinWidth(180);
-		colunaNome.setCellValueFactory(new PropertyValueFactory("nome"));
-
-		// DESCRICAO
-		TableColumn colunaDescricao = new TableColumn("Descrição");
-		colunaDescricao.setMinWidth(230);
-		colunaDescricao.setCellValueFactory(new PropertyValueFactory("descricao"));
-
-		// VALOR
-		TableColumn colunaValor = new TableColumn("Valor");
-		colunaValor.setMinWidth(60);
-		colunaValor.setCellValueFactory(new PropertyValueFactory("valor"));
-
-		// ISBN
-		TableColumn colunaIsbn = new TableColumn("ISBN");
-		colunaIsbn.setMinWidth(180);
-		colunaIsbn.setCellValueFactory(new PropertyValueFactory("isbn"));
-
+		// ===================
+		TableColumn colunaNome = criarColuna("Nome", 180, "nome");
+		TableColumn colunaDescricao = criarColuna("Descrição", 230, "descricao"); 
+		TableColumn colunaValor = criarColuna("Valor", 60, "valor"); 
+		TableColumn colunaIsbn = criarColuna("ISBN", 180, "isbn"); 
+		
 		// Adiciona as colunas na tabela
 		tabela.getColumns().addAll(colunaNome, colunaDescricao, colunaValor, colunaIsbn);
 
@@ -75,8 +59,6 @@ public class Main extends Application {
 		// ===================
 		// Cria labels da tela
 		// ===================
-
-		// Listagem de Livros
 		Label labelListagemLivros = new Label("Listagem de Livros");
 		Label labelProgressoExportar = new Label();
 		Label labelSomaProdutos = new Label(
@@ -90,18 +72,14 @@ public class Main extends Application {
 		// ===================
 		// Cria botões da tela
 		// ===================
-
 		Button btnExportar = new Button("Exportar CSV");
 
 		// ================
 		// Ações dos botões
 		// ================
-
-		//Realiza a ação de exportar em uma nova thread
 		btnExportar.setOnAction(new Actions().threadAction(produtos, labelProgressoExportar));
 
 		grupo.getChildren().addAll(labelListagemLivros, labelProgressoExportar, labelSomaProdutos, vbox, btnExportar);
-
 		primaryStage.setTitle("Sistema da livraria com Java FX");
 		primaryStage.show();
 	}
@@ -113,5 +91,21 @@ public class Main extends Application {
 	 */
 	public static void main(String[] args) {
 		launch(args);
+	}
+	
+	/**
+	 * Cria um nova coluna para a TableView 
+	 * 
+	 * @param titulo
+	 * @param largura
+	 * @param atributo
+	 * @return uma coluna nova para a tabela
+	 * @author Jhonata Santos
+	 */
+	private TableColumn<Produto, String> criarColuna(String titulo, int largura, String atributo) {
+		TableColumn<Produto, String> column = new TableColumn<Produto, String>(titulo);
+		column.setMinWidth(largura);
+		column.setCellValueFactory(new PropertyValueFactory<Produto, String>(atributo));
+		return column;
 	}
 }
